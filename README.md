@@ -1,2 +1,6 @@
-# indented2todoist
-Import indented text filesto todoist in Python 3, for example a copy of Google Tasks canvas printout
+# totodoist
+An importer to http://todoist.com.
+
+I'll be using this to import my indented text files, which I exported from 
+Google Tasks, as they are discontinuing canvas view along with 
+multi-indentation.
