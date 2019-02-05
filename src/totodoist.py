@@ -23,7 +23,8 @@ INDENT = ' ' * 4
 
 
 def _indented_tasks(lines):
-    yield from _strip_header_and_initial_indent(lines)
+    for task_line in _strip_header_and_initial_indent(lines):
+        yield _indent_content(task_line)
 
 
 def _strip_header_and_initial_indent(lines):
@@ -34,12 +35,17 @@ def _strip_header_and_initial_indent(lines):
         yield without_initial
 
 
+def _indent_content(task_line):
+    stripped = task_line.lstrip()
+    indent_depth = (len(task_line) - len(stripped)) // len(INDENT) + 1
+    return indent_depth, stripped
+
 # output
 HEADER = (
     'TYPE,CONTENT,PRIORITY,INDENT,AUTHOR,RESPONSIBLE,DATE,DATE_LANG,TIMEZONE'
 )
 USER = 'Adrian (21609785)'
-DEFAULTS = 'task,{content},4,1,{USER},,,en,Europe/Warsaw'
+DEFAULTS = 'task,{content},4,{indent_depth},{USER},,,en,Europe/Warsaw'
 
 
 # click entry point

@@ -14,3 +14,9 @@ task_not_indented
     task_indented'''.split('\n')
     result = list(totodoist._strip_header_and_initial_indent(input_lines))
     assert result == expected
+
+
+def test_indent_content():
+    input_line = ' ' * 8 + 'task_proper'
+    expected = 3, 'task_proper'  # no indentation is 1
+    assert totodoist._indent_content(input_line) == expected
