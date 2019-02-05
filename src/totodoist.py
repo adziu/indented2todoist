@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
+import os
 
 import click
+
 
 @click.command(
     help='Convert indented text files to CSV',
@@ -15,7 +17,9 @@ def indented_command(indented):
     """Convert indented *.txt files into *.csv for Todoist."""
     for indented_file in indented:
         tasks = _indented_tasks(indented_file)
-        print(list(tasks))
+        csv_file_path = os.path.splitext(indented_file.name)[0] + '.csv'
+        with open(csv_file_path, mode='w') as csv_file:
+            csv_file.writelines(_csv_output(tasks))
 
 
 # input
@@ -32,9 +36,9 @@ def _strip_noise(lines):
     lines_iter = iter(lines)
     next(lines_iter, None)
     for line in lines_iter:
-        without_initial = line[len(INITIAL_INDENT):]
-        without_newline = without_initial.rstrip('\n')
-        yield without_newline
+        line = line[len(INITIAL_INDENT):]
+        line = line.rstrip('\n')
+        yield line
 
 
 def _indent_content(task_line):
@@ -47,7 +51,17 @@ HEADER = (
     'TYPE,CONTENT,PRIORITY,INDENT,AUTHOR,RESPONSIBLE,DATE,DATE_LANG,TIMEZONE'
 )
 USER = 'Adrian (21609785)'
-DEFAULTS = 'task,{content},4,{indent_depth},{USER},,,en,Europe/Warsaw'
+DEFAULTS = 'task,{content},4,{indent},{user},,,en,Europe/Warsaw'
+
+
+def _csv_output(tasks):
+    yield HEADER + '\n'
+    for indent, content in tasks:
+        yield DEFAULTS.format(
+            indent=indent,
+            content=content,
+            user=USER
+        ) + '\n'
 
 
 # click entry point
