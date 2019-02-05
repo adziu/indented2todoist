@@ -15,6 +15,7 @@ def indented_command(indented):
     """Convert indented *.txt files into *.csv for Todoist."""
     for indented_file in indented:
         tasks = _indented_tasks(indented_file)
+        print(list(tasks))
 
 
 # input
@@ -23,16 +24,17 @@ INDENT = ' ' * 4
 
 
 def _indented_tasks(lines):
-    for task_line in _strip_header_and_initial_indent(lines):
+    for task_line in _strip_noise(lines):
         yield _indent_content(task_line)
 
 
-def _strip_header_and_initial_indent(lines):
+def _strip_noise(lines):
     lines_iter = iter(lines)
     next(lines_iter, None)
     for line in lines_iter:
         without_initial = line[len(INITIAL_INDENT):]
-        yield without_initial
+        without_newline = without_initial.rstrip('\n')
+        yield without_newline
 
 
 def _indent_content(task_line):

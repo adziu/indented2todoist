@@ -4,7 +4,7 @@
 import totodoist
 
 
-def test_strip_header_and_initial_indent():
+def test_strip_noise():
     input_lines = '''\
 task_list_name
      task_not_indented
@@ -12,7 +12,7 @@ task_list_name
     expected = '''\
 task_not_indented
     task_indented'''.split('\n')
-    result = list(totodoist._strip_header_and_initial_indent(input_lines))
+    result = list(totodoist._strip_noise(input_lines))
     assert result == expected
 
 
